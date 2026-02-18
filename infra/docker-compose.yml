@@ -1,0 +1,48 @@
+services:
+  # ─────────────────────────────────────────────
+  # Backend (Go + Air hot-reload)
+  # ─────────────────────────────────────────────
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    container_name: quiz_backend
+    profiles: [ "back", "full" ]
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../backend/.env
+    environment:
+      - PORT=8080
+    volumes:
+      - ../backend:/app
+      - go_mod_cache:/go/pkg/mod
+    networks:
+      - quiz_network
+
+  # ─────────────────────────────────────────────
+  # Frontend (Vue + Vite dev server)
+  # ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    container_name: quiz_frontend
+    profiles: [ "front", "full" ]
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:8080
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    networks:
+      - quiz_network
+
+volumes:
+  go_mod_cache:
+
+
+networks:
+  quiz_network:
+    driver: bridge
