@@ -111,15 +111,14 @@ build-all:
 DOCKER_USER ?= yourusername
 VERSION ?= latest
 
-tag-prod:
-	docker tag quiz-api:latest $(DOCKER_USER)/quiz-api:$(VERSION)
-	docker tag quiz-frontend:latest $(DOCKER_USER)/quiz-frontend:$(VERSION)
-	@echo "🏷️  Tagged images as $(DOCKER_USER)/...:$(VERSION)"
-
-push-prod: tag-prod
+push-prod:
+	@echo "🏗️  Building images for linux/amd64 (Server Architecture) [No Cache]..."
+	docker build --no-cache --pull --platform linux/amd64 -t $(DOCKER_USER)/quiz-api:$(VERSION) -f backend/Dockerfile backend/
+	docker build --no-cache --pull --platform linux/amd64 -t $(DOCKER_USER)/quiz-frontend:$(VERSION) -f frontend/Dockerfile frontend/
+	@echo "⬆️  Pushing images to Docker Hub..."
 	docker push $(DOCKER_USER)/quiz-api:$(VERSION)
 	docker push $(DOCKER_USER)/quiz-frontend:$(VERSION)
-	@echo "🚀 Pushed images to Docker Hub"
+	@echo "🚀 Successfully pushed $(DOCKER_USER) images (v: $(VERSION)) to Docker Hub"
 
 pull-prod:
 	docker pull $(DOCKER_USER)/quiz-api:$(VERSION)
