@@ -1,0 +1,44 @@
+services:
+  # ─────────────────────────────────────────────
+  # Backend (Go - Distroless)
+  # ─────────────────────────────────────────────
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile # Production Dockerfile
+    container_name: quiz-api-prod
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../backend/.env
+    environment:
+      - APP_ENV=production
+      - PORT=8080
+      # DATABASE_URL is loaded from .env (Supabase)
+    networks:
+      - quiz-network-prod
+    profiles:
+      - back
+      - full
+
+  # ─────────────────────────────────────────────
+  # Frontend (Vue - Nginx)
+  # ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile # Production Dockerfile
+    container_name: quiz-frontend-prod
+    ports:
+      - "80:80" # Nginx default
+    depends_on:
+      - backend
+    networks:
+      - quiz-network-prod
+    profiles:
+      - front
+      - full
+
+networks:
+  quiz-network-prod:
+    driver: bridge
