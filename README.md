@@ -5,13 +5,6 @@ Designed with Clean Architecture, high-performance infrastructure, and productio
 
 ---
 
-## 🎮 Live Demo
-
-Try the application on Google Cloud Shell:
-👉 [**Click Here to View Demo**](https://80-cs-09422ae3-08aa-42b1-97e4-e49df97bc8ed.cs-asia-southeast1-ajrg.cloudshell.dev/)
-
----
-
 ## ✨ Key Features
 
 - **Quiz Management**: Create, List, and Delete quiz questions.
