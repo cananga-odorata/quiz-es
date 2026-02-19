@@ -104,6 +104,12 @@ build-all:
 	make build-back
 	make build-front
 
+build-prod-local:
+	@echo "🏗️  Building PRODUCTION images for LOCAL (Mac/ARM64)..."
+	docker build -t quiz-api:prod-local -f backend/Dockerfile backend/
+	docker build -t quiz-frontend:prod-local -f frontend/Dockerfile frontend/
+	@echo "✅ Done! Images tagged as 'quiz-api:prod-local' and 'quiz-frontend:prod-local'"
+
 # ─────────────────────────────────────────
 # Docker Hub (Push/Pull)
 # ─────────────────────────────────────────

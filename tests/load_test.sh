@@ -9,14 +9,14 @@ URL="http://localhost:$PORT/api/v1/quizzes"
 echo "=============================================="
 echo "🚀 Starting Rate Limit Load Test (Parallel)"
 echo "Target: $URL"
-echo "Sending 50 requests concurrently..."
+echo "Sending 200 requests concurrently..."
 echo "=============================================="
 
 # Create simplified results file
 rm -f results.txt
 
 # Run requests in background
-for i in {1..50}; do
+for i in {1..200}; do
   curl -s -o /dev/null -w "%{http_code}\n" "$URL" >> results.txt &
 done
 
