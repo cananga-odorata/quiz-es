@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -66,9 +67,11 @@ func RateLimitMiddleware(limit float64, burst int) func(next http.Handler) http.
 
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Extract IP without port (e.g. "127.0.0.1:54321" -> "127.0.0.1")
 			ip := r.RemoteAddr
-			// If behind a proxy (like Nginx/Docker), use X-Forwarded-For or RealIP middleware value
-			// RealIP middleware usually replaces RemoteAddr, so this should work.
+			if host, _, err := net.SplitHostPort(ip); err == nil {
+				ip = host
+			}
 
 			if !limiter.GetLimiter(ip).Allow() {
 				w.Header().Set("Content-Type", "application/json")
